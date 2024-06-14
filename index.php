@@ -40,17 +40,17 @@ switch($action)
     case "detailpagina":
         $car_id = $_GET['id'] ?? null;
         if ($car_id) {
-            $stmt = $pdo->prepare('SELECT * FROM Auto WHERE ID = ?');
+            $stmt = $pdo->prepare('SELECT * FROM car WHERE ID = ?');
             $stmt->execute([$car_id]);
             $car = $stmt->fetch();
             if ($car) {
                 $template->assign('car', $car);
                 $template->display("CarDetails.tpl");
             } else {
-                echo "Auto niet gevonden.";
+                echo "car niet gevonden.";
             }
         } else {
-            echo "Geen auto ID opgegeven.";
+            echo "Geen car ID opgegeven.";
         }
         break;
 
@@ -81,10 +81,10 @@ switch($action)
         $user_id = $_SESSION['user_id'];
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['car_id'])) {
             $car_id = $_POST['car_id'];
-            $stmt = $pdo->prepare('INSERT INTO Favorites (UserID, AutoID) VALUES (?, ?)');
+            $stmt = $pdo->prepare('INSERT INTO Favorites (UserID, CarID) VALUES (?, ?)');
             $stmt->execute([$user_id, $car_id]);
         }
-        $stmt = $pdo->prepare('SELECT Auto.* FROM Auto JOIN Favorites ON Auto.ID = Favorites.AutoID WHERE Favorites.UserID = ?');
+        $stmt = $pdo->prepare('SELECT car.* FROM car JOIN Favorites ON car.ID = Favorites.CarID WHERE Favorites.UserID = ?');
         $stmt->execute([$user_id]);
         $favorites = $stmt->fetchAll();
         $template->assign('favorites', $favorites);

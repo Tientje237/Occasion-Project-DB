@@ -10,7 +10,7 @@ class CarList {
     }
 
     public function searchCars($term) {
-        $stmt = $this->pdo->prepare("SELECT * FROM Auto WHERE Brand LIKE ? OR Model LIKE ? OR Specifications LIKE ?");
+        $stmt = $this->pdo->prepare("SELECT * FROM car WHERE Brand LIKE ? OR Model LIKE ? OR Specifications LIKE ?");
         $searchTerm = "%$term%";
         $stmt->execute([$searchTerm, $searchTerm, $searchTerm]);
         return $stmt->fetchAll();
