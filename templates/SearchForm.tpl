@@ -1,4 +1,3 @@
-<!-- SearchForm.tpl -->
 <!DOCTYPE html>
 <html lang="en">
 <head>

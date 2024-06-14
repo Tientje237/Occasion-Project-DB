@@ -17,6 +17,8 @@ $template->setTemplateDir("templates");
 $template->clearCompiledTemplate();
 $template->clearAllCache();
 
+$template->assign('session_user_id', $_SESSION['user_id'] ?? null);
+
 echo "Occasion site<br>";
 
 if (isset($_SESSION['user_id'])) {
@@ -40,22 +42,33 @@ switch($action)
     case "detailpagina":
         $car_id = $_GET['id'] ?? null;
         if ($car_id) {
-            $stmt = $pdo->prepare('SELECT * FROM car WHERE ID = ?');
+            $stmt = $pdo->prepare('SELECT * FROM Car WHERE ID = ?');
             $stmt->execute([$car_id]);
             $car = $stmt->fetch();
             if ($car) {
+                if (isset($_SESSION['user_id'])) {
+                    $stmt_check = $pdo->prepare('SELECT COUNT(*) FROM Favorites WHERE UserID = ? AND CarID = ?');
+                    $stmt_check->execute([$_SESSION['user_id'], $car_id]);
+                    $is_favorite = (bool) $stmt_check->fetchColumn();
+
+                    $car['is_favorite'] = $is_favorite;
+                } else {
+                    $car['is_favorite'] = false;
+                }
+
                 $template->assign('car', $car);
+                $template->assign('session_user_id', isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null);
                 $template->display("CarDetails.tpl");
             } else {
-                echo "car niet gevonden.";
+                echo "Auto niet gevonden.";
             }
         } else {
-            echo "Geen car ID opgegeven.";
+            echo "Geen auto ID opgegeven.";
         }
         break;
 
     case "aanbod":
-        $stmt = $pdo->query('SELECT * FROM car');
+        $stmt = $pdo->query('SELECT * FROM Car');
         $cars = $stmt->fetchAll();
         $template->assign('cars', $cars);
         $template->display("CarList.tpl");
@@ -79,12 +92,32 @@ switch($action)
             exit;
         }
         $user_id = $_SESSION['user_id'];
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['car_id'])) {
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['car_id']) && !isset($_POST['remove'])) {
             $car_id = $_POST['car_id'];
-            $stmt = $pdo->prepare('INSERT INTO Favorites (UserID, CarID) VALUES (?, ?)');
-            $stmt->execute([$user_id, $car_id]);
+
+            $stmt_check = $pdo->prepare('SELECT COUNT(*) FROM Favorites WHERE UserID = ? AND CarID = ?');
+            $stmt_check->execute([$user_id, $car_id]);
+            $is_favorite = (bool) $stmt_check->fetchColumn();
+
+            if (!$is_favorite) {
+                $stmt = $pdo->prepare('INSERT INTO Favorites (UserID, CarID) VALUES (?, ?)');
+                $stmt->execute([$user_id, $car_id]);
+            }
+
+            header('Location: index.php?action=favorieten');
+            exit();
         }
-        $stmt = $pdo->prepare('SELECT car.* FROM car JOIN Favorites ON car.ID = Favorites.CarID WHERE Favorites.UserID = ?');
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['car_id']) && isset($_POST['remove'])) {
+            $car_id = $_POST['car_id'];
+            $stmt = $pdo->prepare('DELETE FROM Favorites WHERE UserID = ? AND CarID = ?');
+            $stmt->execute([$user_id, $car_id]);
+            header('Location: index.php?action=favorieten');
+            exit();
+        }
+
+        $stmt = $pdo->prepare('SELECT Car.* FROM Car JOIN Favorites ON Car.ID = Favorites.CarID WHERE Favorites.UserID = ?');
         $stmt->execute([$user_id]);
         $favorites = $stmt->fetchAll();
         $template->assign('favorites', $favorites);
@@ -122,11 +155,16 @@ switch($action)
         $template->display("LoginForm.tpl");
         $success = '';
         $error = '';
-        if(!empty($_POST['email']) && !empty($_POST['password'])){
+
+        if (!empty($_POST['email']) && !empty($_POST['password'])) {
             $stmt = $pdo->prepare('SELECT * FROM Users WHERE Email = ?');
             $stmt->execute([$_POST['email']]);
             $user = $stmt->fetch();
+
             if ($user && password_verify($_POST['password'], $user['PasswordHash'])) {
+                $stmt = $pdo->prepare('UPDATE Users SET lastlogin = CURRENT_TIMESTAMP WHERE UserID = ?');
+                $stmt->execute([$user['UserID']]);
+
                 $_SESSION['user_id'] = $user['UserID'];
                 $success = 'User logged in successfully.';
                 header('Location: index.php?action=aanbod', true, 303);
@@ -137,9 +175,11 @@ switch($action)
         } else {
             $error = 'All fields are required.';
         }
+
         $template->assign('success', $success);
         $template->assign('error', $error);
         break;
+
 
     case "logout":
         session_unset();

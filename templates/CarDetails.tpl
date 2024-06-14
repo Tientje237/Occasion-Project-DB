@@ -1,4 +1,3 @@
-<!-- CarDetails.tpl -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,12 +19,17 @@
     <li>Specificaties: {$car.specifications}</li>
 </ul>
 
-{if isset($_SESSION.user_id)}
-    <form method="post" action="index.php?action=favorieten">
-        <input type="hidden" name="car_id" value="{$car.ID}">
-        <button type="submit">Toevoegen aan favorieten</button>
-    </form>
+{if isset($car.is_favorite)}
+    {if !$car.is_favorite}
+        <form method="post" action="index.php?action=add_favorite">
+            <input type="hidden" name="car_id" value="{$car.ID}">
+            <button type="submit">Voeg toe aan favorieten</button>
+        </form>
+    {else}
+        <p>Deze auto staat al in je favorieten.</p>
+    {/if}
 {/if}
+
 
 </body>
 </html>
