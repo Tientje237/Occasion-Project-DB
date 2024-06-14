@@ -1,0 +1,11 @@
+{
+    "name": "tinov/occasion",
+    "autoload": {
+        "psr-4": {
+            "Occasion\\": "src/"
+        }
+    },
+    "require": {
+        "smarty/smarty": "^5.1"
+    }
+}
