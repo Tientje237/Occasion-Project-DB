@@ -93,26 +93,23 @@ switch($action)
         }
         $user_id = $_SESSION['user_id'];
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['car_id']) && !isset($_POST['remove'])) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['car_id'])) {
             $car_id = $_POST['car_id'];
 
-            $stmt_check = $pdo->prepare('SELECT COUNT(*) FROM Favorites WHERE UserID = ? AND CarID = ?');
-            $stmt_check->execute([$user_id, $car_id]);
-            $is_favorite = (bool) $stmt_check->fetchColumn();
-
-            if (!$is_favorite) {
-                $stmt = $pdo->prepare('INSERT INTO Favorites (UserID, CarID) VALUES (?, ?)');
+            if (isset($_POST['remove'])) {
+                $stmt = $pdo->prepare('DELETE FROM Favorites WHERE UserID = ? AND CarID = ?');
                 $stmt->execute([$user_id, $car_id]);
+            } else {
+                $stmt_check = $pdo->prepare('SELECT COUNT(*) FROM Favorites WHERE UserID = ? AND CarID = ?');
+                $stmt_check->execute([$user_id, $car_id]);
+                $is_favorite = (bool) $stmt_check->fetchColumn();
+
+                if (!$is_favorite) {
+                    $stmt = $pdo->prepare('INSERT INTO Favorites (UserID, CarID) VALUES (?, ?)');
+                    $stmt->execute([$user_id, $car_id]);
+                }
             }
 
-            header('Location: index.php?action=favorieten');
-            exit();
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['car_id']) && isset($_POST['remove'])) {
-            $car_id = $_POST['car_id'];
-            $stmt = $pdo->prepare('DELETE FROM Favorites WHERE UserID = ? AND CarID = ?');
-            $stmt->execute([$user_id, $car_id]);
             header('Location: index.php?action=favorieten');
             exit();
         }
@@ -123,6 +120,7 @@ switch($action)
         $template->assign('favorites', $favorites);
         $template->display("Favorites.tpl");
         break;
+
 
     case "register":
         $success = '';

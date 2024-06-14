@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Zoeken</title>
+    <title>Occasion Zoeken</title>
 </head>
 <body>
 <h1>Zoeken</h1>

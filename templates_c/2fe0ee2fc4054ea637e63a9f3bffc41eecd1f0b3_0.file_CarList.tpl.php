@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 5.1.0, created on 2024-06-14 09:49:34
+/* Smarty version 5.1.0, created on 2024-06-14 10:04:35
   from 'file:CarList.tpl' */
 
 /* @var \Smarty\Template $_smarty_tpl */
 if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   'version' => '5.1.0',
-  'unifunc' => 'content_666c122e69ecd9_12769077',
+  'unifunc' => 'content_666c15b3f21388_52974722',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '2fe0ee2fc4054ea637e63a9f3bffc41eecd1f0b3' => 
     array (
       0 => 'CarList.tpl',
-      1 => 1718268308,
+      1 => 1718359247,
       2 => 'file',
     ),
   ),
@@ -20,9 +20,16 @@ if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   array (
   ),
 ))) {
-function content_666c122e69ecd9_12769077 (\Smarty\Template $_smarty_tpl) {
+function content_666c15b3f21388_52974722 (\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\wamp64\\www\\Occasion-Project-DB\\templates';
-?><h1>Aanbod</h1>
+?><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Occasion Aanbod</title>
+</head>
+<body>
+<h1>Aanbod</h1>
 <?php
 $_from = $_smarty_tpl->getSmarty()->getRuntime('Foreach')->init($_smarty_tpl, $_smarty_tpl->getValue('cars'), 'car');
 $foreach0DoElse = true;
@@ -42,6 +49,9 @@ km</p>
     </div>
 <?php
 }
-$_smarty_tpl->getSmarty()->getRuntime('Foreach')->restore($_smarty_tpl, 1);
-}
+$_smarty_tpl->getSmarty()->getRuntime('Foreach')->restore($_smarty_tpl, 1);?>
+
+</body>
+</html>
+<?php }
 }

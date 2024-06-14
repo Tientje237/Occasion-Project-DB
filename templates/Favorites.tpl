@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Favorieten</title>
+    <title>Occasion Favorieten</title>
 </head>
 <body>
 <h1>Favorieten</h1>

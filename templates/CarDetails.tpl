@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Auto Details</title>
+    <title>Occasion Auto Details</title>
 </head>
 <body>
 <h1>{$car.brand} {$car.model}</h1>
@@ -21,7 +21,7 @@
 
 {if isset($car.is_favorite)}
     {if !$car.is_favorite}
-        <form method="post" action="index.php?action=add_favorite">
+        <form method="post" action="index.php?action=favorieten">
             <input type="hidden" name="car_id" value="{$car.ID}">
             <button type="submit">Voeg toe aan favorieten</button>
         </form>
@@ -29,7 +29,6 @@
         <p>Deze auto staat al in je favorieten.</p>
     {/if}
 {/if}
-
 
 </body>
 </html>
