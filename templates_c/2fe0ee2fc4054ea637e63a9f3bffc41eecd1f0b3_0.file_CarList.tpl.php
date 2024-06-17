@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 5.1.0, created on 2024-06-14 10:04:35
+/* Smarty version 5.1.0, created on 2024-06-17 08:44:51
   from 'file:CarList.tpl' */
 
 /* @var \Smarty\Template $_smarty_tpl */
 if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   'version' => '5.1.0',
-  'unifunc' => 'content_666c15b3f21388_52974722',
+  'unifunc' => 'content_666ff7838a14a4_54751204',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -20,7 +20,7 @@ if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   array (
   ),
 ))) {
-function content_666c15b3f21388_52974722 (\Smarty\Template $_smarty_tpl) {
+function content_666ff7838a14a4_54751204 (\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\wamp64\\www\\Occasion-Project-DB\\templates';
 ?><!DOCTYPE html>
 <html lang="en">
