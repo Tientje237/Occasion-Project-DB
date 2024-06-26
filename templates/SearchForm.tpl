@@ -1,25 +1,27 @@
-{extends file='Layout.tpl'}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Occasion Zoeken</title>
+</head>
+<body>
+<h1>Zoeken</h1>
+<form method="post" action="index.php?action=zoeken">
+    <input type="text" name="searchTerm" placeholder="Zoekterm..." value="{$searchTerm}">
+    <button type="submit">Zoeken</button>
+</form>
 
-{block name="contentSearch"}
-
-    <h1>Zoek Formulier</h1>
-    <form action="index.php?action=zoeken" method="post">
-        <label for="searchTerm">Zoekterm:</label>
-        <input type="text" id="searchTerm" name="searchTerm" value="{$searchTerm|escape}" required>
-        <button type="submit">Zoeken</button>
-    </form>
-
-    {if $searchTerm}
-        <h2>Zoekresultaten voor '{$searchTerm}':</h2>
-        {if count($searchResults) > 0}
-            <ul>
-                {foreach from=$searchResults item=car}
-                    <li>{$car->printVehicleInfo()}</li>
-                {/foreach}
-            </ul>
-        {else}
-            <p>Geen resultaten gevonden.</p>
-        {/if}
-    {/if}
-
-{/block}
+<h2>Resultaten</h2>
+{if $searchResults|@count > 0}
+    {foreach from=$searchResults item=car}
+        <div>
+            <h2>{$car.brand} {$car.model}</h2>
+            <p>€{$car.price} | {$car.year} | {$car.mileage}km</p>
+            <a href="index.php?action=detailpagina&id={$car.ID}">Bekijk details</a>
+        </div>
+    {/foreach}
+{else}
+    <p>Geen resultaten gevonden voor "{$searchTerm}".</p>
+{/if}
+</body>
+</html>
